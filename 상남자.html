@@ -126,6 +126,7 @@
     <button onclick="showForm('login')">로그인</button>
     <button onclick="showForm('signup')">회원가입</button>
     <img src="image2.png" alt="상남자의 이미지">
+    <b style="font-size: 4rem; color: white;">남자는 등으로 말한다</b>
   </div>
 
   <form id="login-form" class="hidden">
@@ -134,6 +135,7 @@
     <input type="password" id="login-password" placeholder="비밀번호" required>
     <button type="button" onclick="login()">로그인</button>
     <button type="button" onclick="goBack()">1보 전진을 위한 2보 후퇴</button>
+    <img src="image3.png" alt="상남자의 이미지">
   </form>
 
   <form id="signup-form" class="hidden">
@@ -142,6 +144,7 @@
     <input type="password" id="signup-password" placeholder="비밀번호" required>
     <button type="button" onclick="signup()">회원가입</button>
     <button type="button" onclick="goBack()">1보 전진을 위한 2보 후퇴</button>
+    <img src="image3.png" alt="상남자의 이미지">
   </form>
 
   <div id="welcome" class="hidden">
@@ -401,7 +404,7 @@
       rankings.forEach((entry, index) => {
         const listItem = document.createElement('li');
         listItem.style = 'margin:10px; font-size:1.2rem; color:yellow;';
-        listItem.textContent = `${index + 1}위 ${entry.username}: ${entry.score}점`;
+        listItem.textContent = `💪🏻${index + 1}등 사나이💪🏻 [${entry.username}: ${entry.score}점]`;
         rankingList.appendChild(listItem);
       });
     
