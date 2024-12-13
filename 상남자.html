@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>상남자의 웹페이지</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: black;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    h1, h2 {
+      margin-bottom: 20px;
+    }
+    button {
+      margin: 20px auto;
+      padding: 25px 50px;
+      font-size: 1.8rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background-color: darkred;
+      color: white;
+      text-align: center;
+      display: block;
+    }
+    button:hover {
+      background-color: crimson;
+    }
+    input {
+      display: block;
+      width: 80%;
+      max-width: 400px;
+      margin: 10px auto;
+      padding: 15px;
+      font-size: 1.2rem;
+      border-radius: 5px;
+      border: none;
+    }
+    form {
+      margin: 20px auto;
+      text-align: center;
+      width: 100%;
+    }
+    textarea {
+      display: block;
+      width: 80%;
+      max-width: 400px;
+      margin: 10px auto;
+      padding: 15px;
+      font-size: 1.2rem;
+      border-radius: 5px;
+      border: none;
+    }
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin: 20px auto;
+    }
+    #main-buttons {
+      margin: 20px auto;
+    }
+    .hidden {
+      display: none;
+    }
+    #board {
+      margin-top: 20px;
+      text-align: center;
+      padding: 20px;
+      background-color: darkred;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #board h2 {
+      font-size: 1.5rem;
+      color: yellow;
+      text-align: center;
+    }
+    .post {
+      background-color: black;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      color: white;
+      text-align: center;
+    }
+    .post span {
+      font-size: 0.8rem;
+      color: gray;
+      text-align: center;
+    }
+    #game-area {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 400px;
+      background-color: darkred;
+      position: relative;
+      color: yellow;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+    #ranking-page ul {
+      list-style: none;
+      padding: 0;
+    }
+    #ranking-page li {
+      margin: 10px 0;
+      font-size: 1.5rem;
+      color: gold;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>상남자의 홈페이지</h1>
+  <div id="main-buttons">
+    <button onclick="showForm('login')">로그인</button>
+    <button onclick="showForm('signup')">회원가입</button>
+    <img src="image2.png" alt="상남자의 이미지">
+  </div>
+
+  <form id="login-form" class="hidden">
+    <h2>로그인</h2>
+    <input type="text" id="login-username" placeholder="아이디" required>
+    <input type="password" id="login-password" placeholder="비밀번호" required>
+    <button type="button" onclick="login()">로그인</button>
+    <button type="button" onclick="goBack()">1보 전진을 위한 2보 후퇴</button>
+  </form>
+
+  <form id="signup-form" class="hidden">
+    <h2>회원가입</h2>
+    <input type="text" id="signup-username" placeholder="아이디" required>
+    <input type="password" id="signup-password" placeholder="비밀번호" required>
+    <button type="button" onclick="signup()">회원가입</button>
+    <button type="button" onclick="goBack()">1보 전진을 위한 2보 후퇴</button>
+  </form>
+
+  <div id="welcome" class="hidden">
+    <h2>어서와라, 상남자의 홈페이지다!</h2>
+    <div id="welcome-buttons">
+      <button onclick="goToBoard()">게시판으로</button>
+      <button onclick="startGame()" style="display:none;">상남자력 테스트</button>
+      <button onclick="showRanking()" style="display:none;">랭킹 보기</button>
+    </div>
+    <button onclick="logout()">리버스 로그인</button>
+    <img src="image.png" alt="상남자의 이미지">
+  </div>
+  
+
+  <div id="board" class="hidden">
+    <h2>남아일언중천금</h2>
+    <textarea id="post-content" rows="5" placeholder="여기에 글을 작성하라" required></textarea>
+    <button type="button" onclick="addPost()">글 올리기</button>
+    <div id="posts"></div>
+    <button onclick="logout()">리버스 로그인</button>
+    <button onclick="goBack()">1보 전진을 위한 2보 후퇴</button>
+  </div>
+
+  <script>
+    let boardTimer;
+
+    function startBoardTimer() {
+      clearTimeout(boardTimer);
+      boardTimer = setTimeout(() => {
+        alert('시간 초과다. 상남자는 시간을 허투루 쓰지 않는다.');
+        window.close();
+      }, 60000);
+    }
+
+    function goToBoard() {
+      document.getElementById('welcome').classList.add('hidden');
+      document.getElementById('board').classList.remove('hidden');
+      startBoardTimer();
+    }
+
+    function addPost() {
+      const content = document.getElementById('post-content').value.trim();
+      const allowedWords = ['상남자', '사나이', '남자'];
+
+      if (!content) {
+        alert('내용을 입력해라!');
+        return;
+      }
+
+      if (!allowedWords.some(word => content.includes(word))) {
+        alert('상남자답지 않은 글이다! "상남자", "사나이", "남자" 중 하나를 포함해라!');
+        return;
+      }
+
+      const post = document.createElement('div');
+      post.classList.add('post');
+      const timestamp = new Date().toLocaleString();
+      post.innerHTML = `<p>${content}</p><span>${timestamp}</span>`;
+      document.getElementById('posts').appendChild(post);
+
+      document.getElementById('post-content').value = '';
+    }
+
+    function logout() {
+      sessionStorage.removeItem('loggedInUser');
+      document.getElementById('welcome').classList.add('hidden');
+      document.getElementById('board').classList.add('hidden');
+      document.getElementById('main-buttons').classList.remove('hidden');
+      clearTimeout(boardTimer);
+    }
+
+    function showForm(type) {
+      document.getElementById('main-buttons').classList.add('hidden');
+      if (type === 'login') {
+        document.getElementById('login-form').classList.remove('hidden');
+      } else if (type === 'signup') {
+        document.getElementById('signup-form').classList.remove('hidden');
+      }
+    }
+
+    function goBack() {
+      document.querySelectorAll('form').forEach(form => form.classList.add('hidden'));
+      document.getElementById('welcome').classList.add('hidden');
+      document.getElementById('board').classList.add('hidden');
+      document.getElementById('main-buttons').classList.remove('hidden');
+    }
+
+
+    function signup() {
+      const username = document.getElementById('signup-username').value;
+      const password = document.getElementById('signup-password').value;
+
+      if (localStorage.getItem(username)) {
+        alert('이 아이디는 이미 쓰고 있는 놈이 있다!');
+      } else {
+        localStorage.setItem(username, password);
+        alert('회원가입 완료다!');
+        goBack();
+      }
+    }
+
+    function login() {
+      const username = document.getElementById('login-username').value;
+      const password = document.getElementById('login-password').value;
+        
+      const storedPassword = localStorage.getItem(username);
+        
+      if (storedPassword === password) {
+        sessionStorage.setItem('loggedInUser', username);
+        document.getElementById('login-form').classList.add('hidden');
+        document.getElementById('welcome').classList.remove('hidden');
+        updateWelcomeButtons();
+      } else {
+        alert('아이디나 비밀번호가 틀렸다. 다시 해라.');
+      }
+    }
+
+    function updateWelcomeButtons() {
+      const currentUser = sessionStorage.getItem('loggedInUser');
+      const welcomeButtons = document.getElementById('welcome-buttons');  
+
+      if (currentUser) {
+        welcomeButtons.querySelector('button:nth-child(2)').style.display = 'inline-block'; 
+        welcomeButtons.querySelector('button:nth-child(3)').style.display = 'inline-block'; 
+      } else {
+        welcomeButtons.querySelector('button:nth-child(2)').style.display = 'none';
+        welcomeButtons.querySelector('button:nth-child(3)').style.display = 'none';
+       }
+    }   
+
+    window.onload = function () {
+      const loggedInUser = sessionStorage.getItem('loggedInUser');
+      if (loggedInUser) {
+        document.getElementById('main-buttons').classList.add('hidden');
+        document.getElementById('welcome').classList.remove('hidden');
+        updateWelcomeButtons(); 
+      }
+    };
+
+
+    let score = 0;
+    let gameTimer;
+    
+    function startGame() {
+      const currentUser = sessionStorage.getItem('loggedInUser');
+      if (!currentUser) {
+        alert('로그인 후 이용해라!');
+        return;
+      }
+    
+      resetGameState();
+
+      const gameArea = createGameArea();
+      const countdown = createCountdown(gameArea);
+    
+      spawnPunch();
+      startCountdown(countdown, currentUser);
+    }
+
+    function resetGameState() {
+      score = 0;
+      const existingGameArea = document.getElementById('game-area');
+      if (existingGameArea) existingGameArea.remove();
+      document.getElementById('welcome').classList.add('hidden');
+    }
+
+    function createGameArea() {
+      const gameArea = document.createElement('div');
+      gameArea.id = 'game-area';
+      gameArea.style = 'position:relative; height:400px; background-color:black;';
+      document.body.appendChild(gameArea);
+      return gameArea;
+    }
+
+    function createCountdown(gameArea) {
+      const countdown = document.createElement('h2');
+      countdown.id = 'countdown';
+      countdown.textContent = '10초 준비해라!';
+      countdown.style = 'color: white; text-align: center;';
+      gameArea.appendChild(countdown);
+      return countdown;
+    }
+
+    function startCountdown(countdown, currentUser) {
+      countdown.style.position = 'absolute';
+      countdown.style.top = '10px';
+      countdown.style.left = '50%';
+      countdown.style.transform = 'translateX(-50%)';
+
+      gameTimer = setInterval(() => {
+        const timeLeft = parseInt(countdown.textContent) - 1;
+        if (timeLeft > 0) {
+          countdown.textContent = `${timeLeft}초 남았다!`;
+        } else {
+          clearInterval(gameTimer);
+          endGame(currentUser);
+        }
+      }, 1000);
+    }
+
+
+    function spawnPunch() {
+      const punch = document.createElement('img');
+      punch.src = 'punch.png';
+      punch.alt = '주먹';
+      punch.style.position = 'absolute';
+      punch.style.width = '150px';
+      punch.style.height = '150px';
+      punch.style.cursor = 'pointer';
+
+      const gameArea = document.getElementById('game-area');
+      const gameAreaRect = gameArea.getBoundingClientRect();
+
+      const maxX = gameAreaRect.width - 50;
+      const maxY = gameAreaRect.height - 50;
+
+      punch.style.left = `${Math.random() * maxX}px`;
+      punch.style.top = `${Math.random() * maxY}px`;
+
+      punch.onclick = () => {
+        score++;
+        punch.remove();
+        spawnPunch();
+      };
+    
+      gameArea.appendChild(punch);
+    }
+
+
+    function endGame(currentUser) {
+      clearInterval(gameTimer);
+      document.getElementById('game-area').remove();
+      alert(`결과: ${score}점!`);
+      saveScore(currentUser, score);
+      document.getElementById('welcome').classList.remove('hidden');
+    }
+
+    function saveScore(username, score) {
+      let rankings = JSON.parse(localStorage.getItem('rankings')) || [];
+      rankings.push({ username, score, timestamp: Date.now() });
+      rankings.sort((a, b) => b.score - a.score || a.timestamp - b.timestamp);
+      rankings = rankings.slice(0, 10);
+      localStorage.setItem('rankings', JSON.stringify(rankings));
+    }
+
+    function showRanking() {
+      document.getElementById('welcome').classList.add('hidden');
+      const rankingPage = document.createElement('div');
+      rankingPage.id = 'ranking-page';
+      rankingPage.style = 'text-align:center; color:white; background-color:darkred; padding:20px;';
+      document.body.appendChild(rankingPage);
+    
+      const rankings = JSON.parse(localStorage.getItem('rankings')) || [];
+      const rankingList = document.createElement('ul');
+      rankingList.style = 'list-style:none; padding:0;';
+    
+      rankings.forEach((entry, index) => {
+        const listItem = document.createElement('li');
+        listItem.style = 'margin:10px; font-size:1.2rem; color:yellow;';
+        listItem.textContent = `${index + 1}위 ${entry.username}: ${entry.score}점`;
+        rankingList.appendChild(listItem);
+      });
+    
+      const backButton = document.createElement('button');
+      backButton.textContent = '1보 전진을 위한 2보 후퇴';
+      backButton.style = 'margin-top:20px;';
+      backButton.onclick = () => {
+        rankingPage.remove();
+        document.getElementById('welcome').classList.remove('hidden');
+      };
+    
+      rankingPage.appendChild(rankingList);
+      rankingPage.appendChild(backButton);
+    }
+
+  </script>
+</body>
+</html>
