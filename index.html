@@ -187,26 +187,33 @@
 
     function addPost() {
       const content = document.getElementById('post-content').value.trim();
-      const allowedWords = ['상남자', '사나이', '남자'];
-
+        
       if (!content) {
         alert('내용을 입력해라!');
         return;
       }
-
-      if (!allowedWords.some(word => content.includes(word))) {
-        alert('상남자답지 않은 글이다! "상남자", "사나이", "남자" 중 하나를 포함해라!');
-        return;
+    
+      let formattedContent = `사나이 ${content} 상남자`;
+    
+      const words = formattedContent.split(' ');
+      const numberOfInsertions = Math.min(3, words.length - 1); 
+    
+      for (let i = 0; i < numberOfInsertions; i++) {
+        const randomIndex = Math.floor(Math.random() * (words.length - 1)) + 1; 
+        words.splice(randomIndex, 0, '💪🏻상남자💪🏻');
       }
-
+    
+      formattedContent = words.join(' '); 
+    
       const post = document.createElement('div');
       post.classList.add('post');
       const timestamp = new Date().toLocaleString();
-      post.innerHTML = `<p>${content}</p><span>${timestamp}</span>`;
+      post.innerHTML = `<p>${formattedContent}</p><span>${timestamp}</span>`;
       document.getElementById('posts').appendChild(post);
-
-      document.getElementById('post-content').value = '';
+      document.getElementById('post-content').value = ''; 
     }
+
+
 
     function logout() {
       sessionStorage.removeItem('loggedInUser');
