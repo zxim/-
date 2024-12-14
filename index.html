@@ -117,6 +117,25 @@
       font-size: 1.5rem;
       color: gold;
     }
+    #food-tournament {
+      position: fixed; 
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.9);
+      color: white;
+      display: none; 
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000; 
+    }
+
+    #food-tournament.visible {
+      display: flex; 
+    }
+
 
   </style>
 </head>
@@ -150,11 +169,12 @@
   <div id="welcome" class="hidden">
     <h2>어서와라, 상남자의 홈페이지다!</h2>
     <div id="welcome-buttons">
-      <button onclick="goToBoard()">게시판으로</button>
-      <button onclick="startGame()" style="display:none;">상남자력 테스트</button>
-      <button onclick="showRanking()" style="display:none;">랭킹 보기</button>
+      <button onclick="goToBoard()">게시판으로</button><br>
+      <button onclick="startGame()">상남자력 테스트</button>
+      <button onclick="showRanking()">랭킹 보기</button><br>
+      <button onclick="startFoodTournament()">상남자 음식 월드컵</button><br>
+      <button onclick="logout()">리버스 로그인</button>
     </div>
-    <button onclick="logout()">리버스 로그인</button>
     <img src="image.png" alt="상남자의 이미지">
   </div>
   
@@ -167,6 +187,8 @@
     <button onclick="logout()">리버스 로그인</button>
     <button onclick="goBack()">1보 전진을 위한 2보 후퇴</button>
   </div>
+
+  <div id="food-tournament" class="hidden" style="text-align:center; padding:20px;"></div>
 
   <script>
     let boardTimer;
@@ -271,16 +293,25 @@
 
     function updateWelcomeButtons() {
       const currentUser = sessionStorage.getItem('loggedInUser');
-      const welcomeButtons = document.getElementById('welcome-buttons');  
+      const welcomeButtons = document.getElementById('welcome-buttons');
 
+      if (!welcomeButtons) {
+        console.error("Element 'welcome-buttons'를 찾을 수 없습니다.");
+        return;
+      }
+    
+      const button2 = welcomeButtons.querySelector('button:nth-child(2)');
+      const button3 = welcomeButtons.querySelector('button:nth-child(3)');
+    
       if (currentUser) {
-        welcomeButtons.querySelector('button:nth-child(2)').style.display = 'inline-block'; 
-        welcomeButtons.querySelector('button:nth-child(3)').style.display = 'inline-block'; 
+        if (button2) button2.style.display = 'inline-block';
+        if (button3) button3.style.display = 'inline-block';
       } else {
-        welcomeButtons.querySelector('button:nth-child(2)').style.display = 'none';
-        welcomeButtons.querySelector('button:nth-child(3)').style.display = 'none';
-       }
-    }   
+        if (button2) button2.style.display = 'none';
+        if (button3) button3.style.display = 'none';
+      }
+    }
+
 
     window.onload = function () {
       const loggedInUser = sessionStorage.getItem('loggedInUser');
@@ -425,6 +456,125 @@
     
       rankingPage.appendChild(rankingList);
       rankingPage.appendChild(backButton);
+    }
+
+
+    function startFoodTournament() {
+      const foodImages = [
+        'food/CPU.png',
+        'food/강철.png',
+        'food/고추.png',
+        'food/김치.png',
+        'food/나무껍질.png',
+        'food/닭가슴살.png',
+        'food/돈까스.png',
+        'food/돌맹이.png',
+        'food/돼지국밥.png',
+        'food/맥주.png',
+        'food/메모리.png',
+        'food/밥.png',
+        'food/번개.png',
+        'food/복분자.png',
+        'food/부대찌개.png',
+        'food/불.png',
+        'food/사나이 울리는 농심 신라면.png',
+        'food/삼겹살.png',
+        'food/삼계탕.png',
+        'food/생고기.png',
+        'food/소시지.png',
+        'food/순대국.png',
+        'food/숯.png',
+        'food/아이스 아메리카노.png',
+        'food/잡초.png',
+        'food/장어.png',
+        'food/제육.png',
+        'food/족발.png',
+        'food/치킨.png',
+        'food/태양.png',
+        'food/핵.png',
+        'food/핵불닭볶음면 3X.png',
+      ];
+
+      const shuffledFoods = foodImages.sort(() => Math.random() - 0.5); 
+      let currentPairs = shuffledFoods.slice();
+      let nextRound = [];
+      let roundCount = Math.log2(foodImages.length);
+
+      const roundNames = {
+        5: '32강',
+        4: '16강',
+        3: '8강',
+        2: '4강',
+        1: '결승',
+      };
+    
+      const getFoodName = (filePath) => filePath.split('/').pop().replace('.png', '');
+    
+      function showFoodPair() {
+        const tournamentArea = document.getElementById('food-tournament');
+        tournamentArea.classList.add('visible');
+        tournamentArea.style.display = 'flex';
+
+        if (currentPairs.length === 0 && nextRound.length === 1) {
+          const winnerName = getFoodName(nextRound[0]);
+          tournamentArea.innerHTML = `
+            <div style="text-align: center;">
+              <h2 style="font-size: 2rem;">최고의 상남자 음식:</h2>
+              <img src="${nextRound[0]}" alt="Champion" style="width:300px; height:300px; margin:20px;">
+              <p style="color:yellow; font-size:2rem; font-weight:bold;">${winnerName}</p>
+              <button onclick="closeFoodTournament()" style="margin-top:20px; padding:10px 20px; font-size:1.2rem; background-color:darkred; color:white; border:none; border-radius:5px; cursor:pointer;">닫기</button>
+            </div>
+          `;
+          return;
+        }
+      
+        if (currentPairs.length === 0 && nextRound.length > 1) {
+          currentPairs = nextRound;
+          nextRound = [];
+          roundCount--;
+        }
+      
+        const [food1, food2] = currentPairs.splice(0, 2);
+        const food1Name = getFoodName(food1);
+        const food2Name = getFoodName(food2);
+      
+        tournamentArea.innerHTML = `
+          <h2 style="font-size: 1.5rem; margin-bottom: 20px;">${roundNames[roundCount]} 대결!</h2>
+          <div style="display:flex; justify-content:center; gap:20px;">
+            <div style="text-align:center;">
+              <img src="${food1}" alt="${food1Name}" style="width:300px; height:300px; margin:10px; cursor:pointer;" onclick="chooseFood('${food1}')">
+              <p style="color:white; font-size:1.2rem;">${food1Name}</p>
+            </div>
+            <div style="text-align:center;">
+              <img src="${food2}" alt="${food2Name}" style="width:300px; height:300px; margin:10px; cursor:pointer;" onclick="chooseFood('${food2}')">
+              <p style="color:white; font-size:1.2rem;">${food2Name}</p>
+            </div>
+          </div>
+        `;
+      }
+
+      window.closeFoodTournament = function () {
+        const tournamentArea = document.getElementById('food-tournament');
+
+        tournamentArea.style.display = 'none';
+        tournamentArea.classList.remove('visible');
+        tournamentArea.innerHTML = ''; 
+
+        const welcomeScreen = document.getElementById('welcome');
+        if (welcomeScreen && welcomeScreen.classList.contains('hidden')) {
+          welcomeScreen.classList.remove('hidden'); 
+        }
+      };
+
+
+      window.chooseFood = function (selectedFood) {
+        nextRound.push(selectedFood);
+        showFoodPair();
+      };
+    
+      document.getElementById('welcome').classList.add('hidden');
+      document.getElementById('food-tournament').classList.remove('hidden');
+      showFoodPair();
     }
 
   </script>
