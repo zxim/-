@@ -197,7 +197,7 @@
       boardTimer = setTimeout(() => {
         alert('시간 초과다. 상남자는 시간을 허투루 쓰지 않는다.');
         window.close();
-      }, 60000);
+      }, 50000);
     }
 
     function goToBoard() {
@@ -388,8 +388,8 @@
       punch.src = 'punch.png';
       punch.alt = '주먹';
       punch.style.position = 'absolute';
-      punch.style.width = '150px';
-      punch.style.height = '150px';
+      punch.style.width = '100px';
+      punch.style.height = '90px';
       punch.style.cursor = 'pointer';
 
       const gameArea = document.getElementById('game-area');
