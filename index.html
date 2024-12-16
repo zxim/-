@@ -173,6 +173,7 @@
       <button onclick="startGame()">상남자력 테스트</button>
       <button onclick="showRanking()">상남자 랭킹</button><br>
       <button onclick="startFoodTournament()">상남자 음식 월드컵</button><br>
+      <button onclick="gayTest()">하남자 테스트</button><br>
       <button onclick="logout()">리버스 로그인</button>
     </div>
     <img src="image.png" alt="상남자의 이미지">
@@ -574,6 +575,80 @@
       document.getElementById('welcome').classList.add('hidden');
       document.getElementById('food-tournament').classList.remove('hidden');
       showFoodPair();
+    }
+
+    let gayTestIndex = 0; 
+    const gayTestQuestions = [
+      "5층 이하는 창문에서 뛰어내린다",
+      "필기할 때에는 돌판에 도끼로 새긴다",
+      "코딩할 때 메모리 따위는 신경쓰지 않는다",
+      "데이터베이스를 사용하지 않는다",
+      "국밥을 먹을 때 덜어먹지 않는다",
+      "코딩은 한 손으로 한다",
+      "3대 500",
+      "휴대폰은 갤럭시다",
+      "커피는 무조건 아이스다",
+      "남들의 시선 따위 신경쓰지 않는다",
+      "브라우저 호환성 따위 신경 쓰지 않는다. 모든 사람이 최신 브라우저를 쓴다",
+      "디버깅을 하지 않는다. 코드는 처음부터 완벽하게 한다",
+      "상남자는 파일 하나에 모든 코드를 짠다",
+      "프레임워크, 라이브러리는 사치다",
+      "한번 결정한 선택은 번복하지 않는다",
+      "명예와 신의를 지킨다"
+    ];
+    
+    function gayTest() {
+      gayTestIndex = 0; 
+      document.getElementById("welcome").classList.add("hidden");
+      showGayTestQuestion(); 
+    }
+  
+    function showGayTestQuestion() {
+      const testArea = document.getElementById("food-tournament");
+      testArea.classList.add("visible");
+      testArea.style.display = "flex";
+      testArea.style.flexDirection = "column";
+      testArea.style.alignItems = "center";
+      testArea.innerHTML = `
+        <div style="text-align: center; width: 100%; max-width: 500px;">
+          <h2 style="min-height: 80px; display: flex; align-items: center; justify-content: center;">${gayTestQuestions[gayTestIndex]}</h2>
+          <div style="display: flex; justify-content: space-between; margin-top: 20px; width: 100%; max-width: 400px;">
+            <button style="flex: 1; margin: 0 10px; padding: 15px 30px; font-size: 1.2rem; background-color: darkred; color: white; border: none; border-radius: 5px; cursor: pointer;" onclick="handleGayTestAnswer('yes')">예</button>
+            <button style="flex: 1; margin: 0 10px; padding: 15px 30px; font-size: 1.2rem; background-color: crimson; color: white; border: none; border-radius: 5px; cursor: pointer;" onclick="handleGayTestAnswer('no')">아니오</button>
+          </div>
+        </div>
+      `;
+    }
+  
+    function handleGayTestAnswer(answer) {
+      if (answer === "no") {
+        endGayTest("하남자");
+      } else {
+        gayTestIndex++;
+        if (gayTestIndex < gayTestQuestions.length) {
+          showGayTestQuestion(); 
+        } else {
+          endGayTest("상남자"); 
+        }
+      }
+    }
+  
+    function endGayTest(result) {
+      const testArea = document.getElementById("food-tournament");
+      testArea.innerHTML = `
+        <div style="text-align: center;">
+          <h2 style="font-size: 2rem; color: yellow;">테스트 결과:</h2>
+          <p style="font-size: 1.5rem; color: ${result === "상남자" ? "green" : "red"};">${result}</p>
+          <button style="margin-top: 20px; padding: 10px 20px; font-size: 1.2rem; background-color: darkred; color: white; border: none; border-radius: 5px; cursor: pointer;" onclick="closeGayTest()">닫기</button>
+        </div>
+      `;
+    }
+  
+    function closeGayTest() {
+      const testArea = document.getElementById("food-tournament");
+      testArea.style.display = "none";
+      testArea.classList.remove("visible");
+      document.getElementById("welcome").classList.remove("hidden"); 
     }
 
   </script>
