@@ -139,6 +139,22 @@
       display: flex; 
     }
 
+    #action-buttons button {
+      padding: 10px 20px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 5px;
+      background-color: darkred;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    #action-buttons button:hover {
+      background-color: crimson;
+    }
+
+
   </style>
 </head>
 <body>
@@ -176,20 +192,21 @@
 
   <div id="welcome" class="hidden">
     <h2>어서와라, 상남자의 홈페이지다!</h2>
-    <div id="welcome-buttons">
-      <button onclick="goToBoard()">게시판으로</button><br>
+    <div id="welcome-buttons" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 600px; margin: 0 auto;">
+      <button onclick="goToBoard()">게시판으로</button>
       <button onclick="startGame()">상남자력 테스트</button>
-      <button onclick="showRanking()">상남자 랭킹</button><br>
-      <button onclick="startFoodTournament()">상남자 음식 월드컵</button><br>
-      <button onclick="gayTest()">하남자 테스트</button><br>
-      <button onclick="logout()">리버스 로그인</button>
+      <button onclick="showRanking()">상남자 랭킹</button>
+      <button onclick="startFoodTournament()">상남자 음식 월드컵</button>
+      <button onclick="gayTest()">하남자 테스트</button>
+      <button onclick="startRaisingManGame()">상남자 키우기</button>
     </div>
-    <a href="https://www.youtube.com/watch?v=D3vO_ogtpUI&t=470s" target="_blank">
+    <button onclick="logout()" style="margin-top: 20px; display: block; margin-left: auto; margin-right: auto;">리버스 로그인</button>
+    <a href="https://www.youtube.com/watch?v=D3vO_ogtpUI&t=470s" target="_blank" style="display: block; margin-top: 20px;">
       <img src="image.png" alt="상남자의 이미지">
     </a>
   </div>
   
-
+    
   <div id="board" class="hidden">
     <h2>남아일언중천금</h2>
     <textarea id="post-content" rows="5" placeholder="여기에 글을 작성하라" required></textarea>
@@ -199,6 +216,27 @@
   </div>
 
   <div id="food-tournament" class="hidden" style="text-align:center; padding:20px;"></div>
+
+  <div id="raising-man-game" class="hidden">
+    <h2>상남자 키우기 게임</h2>
+    <p id="game-day">Day 1</p>
+    <div id="health-container" style="display: flex; flex-wrap: wrap; max-width: 300px; margin: 0 auto;"></div>
+    <p id="game-status">상남자가 첫 날을 시작합니다!</p>
+    <div id="action-buttons" style="display: flex; justify-content: center; gap: 20px; margin-top: 20px;">
+      <button id="exercise-button" onclick="performAction('exercise')">운동하기</button>
+      <button id="eat-button" onclick="performAction('eat')">밥먹기</button>
+      <button id="sleep-button" onclick="performAction('sleep')">잠자기</button>
+    </div>
+    <button onclick="exitRaisingManGame()" style="margin-top: 20px;">게임 종료</button>
+  </div>
+
+  
+  <div id="game-over" class="hidden">
+    <h2>상남자가 사망했습니다!</h2>
+    <p>체력을 모두 잃거나 사고로 인해 사망했습니다. 다시 도전하세요!</p>
+    <button onclick="restartGame()">다시 시작</button>
+  </div>
+  
 
   <script>
     let boardTimer;
@@ -244,8 +282,6 @@
       document.getElementById('posts').appendChild(post);
       document.getElementById('post-content').value = ''; 
     }
-
-
 
     function logout() {
       sessionStorage.removeItem('loggedInUser');
@@ -660,6 +696,140 @@
       testArea.classList.remove("visible");
       document.getElementById("welcome").classList.remove("hidden"); 
     }
+
+
+    let currentDay = 1;
+    let isAlive = true;
+    let health = 10; 
+    const maxHeartsPerRow = 10; 
+
+    function startRaisingManGame() {
+      currentDay = 1;
+      isAlive = true;
+      health = 10; 
+      document.getElementById("welcome").classList.add("hidden");
+      document.getElementById("raising-man-game").classList.remove("hidden");
+      document.getElementById("game-day").textContent = "Day 1";
+      document.getElementById("game-status").textContent = "상남자가 첫 날을 시작합니다!";
+      updateHealthDisplay(); 
+    }
+
+    function updateHealthDisplay() {
+      const healthContainer = document.getElementById("health-container");
+      healthContainer.innerHTML = ""; 
+    
+      let row;
+      for (let i = 0; i < health; i++) {
+        if (i % maxHeartsPerRow === 0) {
+          row = document.createElement("div");
+          row.style.display = "flex";
+          row.style.justifyContent = "center";
+          healthContainer.appendChild(row);
+        }
+      
+        const heart = document.createElement("img");
+        heart.src = "heart.png"; 
+        heart.alt = "체력";
+        heart.style.width = "30px";
+        heart.style.margin = "5px";
+        row.appendChild(heart);
+      }
+    }
+
+    function performAction(action) {
+      if (!isAlive) return;
+    
+      const outcomes = {
+        exercise: [
+          { chance: 50, result: "운동 성공! 체력이 증가합니다.", effect: +1 },
+          { chance: 10, result: "데드리프트 실패로 깔려 사망!", effect: -health },
+          { chance: 10, result: "벤치프레스 실패로 깔려 사망!", effect: -health },
+          { chance: 10, result: "운동 중 근육 부상! 체력이 2 감소합니다.", effect: -2 },
+          { chance: 10, result: "넘어지며 발목 부상! 체력이 1 감소합니다.", effect: -1 },
+          { chance: 10, result: "운동 중 어깨 부상! 체력이 2 감소합니다.", effect: -2 }
+        ],
+        eat: [
+          { chance: 50, result: "맛있게 먹었습니다! 체력이 회복됩니다.", effect: +1 },
+          { chance: 10, result: "밥알이 목에 걸려 사망!", effect: -health },
+          { chance: 10, result: "소화 불량으로 체력이 2 감소합니다.", effect: -2 },
+          { chance: 10, result: "뜨거운 국물을 마셔 체력이 1 감소합니다.", effect: -1 },
+          { chance: 10, result: "잘못된 음식을 먹어 체력이 2 감소합니다.", effect: -2 },
+          { chance: 10, result: "식중독으로 체력이 3 감소합니다.", effect: -3 }
+        ],
+        sleep: [
+          { chance: 50, result: "푹 잤습니다! 체력이 완전히 회복됩니다.", effect: +1 },
+          { chance: 10, result: "잠결에 침대에서 떨어져 사망!", effect: -health },
+          { chance: 10, result: "잠자던 중 악몽을 꿔 체력이 1 감소합니다.", effect: -1 },
+          { chance: 10, result: "잠결에 근육 경련이 생겨 체력이 2 감소합니다.", effect: -2 },
+          { chance: 10, result: "베개가 너무 높아 목 부상! 체력이 1 감소합니다.", effect: -1 },
+          { chance: 10, result: "이불 속에서 몸살 감기! 체력이 2 감소합니다.", effect: -2 }
+        ]
+      };
+    
+      const outcome = getOutcome(outcomes[action]);
+      health += outcome.effect;
+    
+      if (outcome.result.includes("사망") || health <= 0) {
+        isAlive = false;
+        health = 0;
+        updateHealthDisplay();
+        showGameOver();
+        return;
+      }
+    
+      document.getElementById("game-status").textContent = `${outcome.result}`;
+      updateHealthDisplay();
+    
+      currentDay++;
+      if (currentDay > 10) {
+        showGameSuccess(); // 게임 성공 처리
+        return;
+      }
+    
+      document.getElementById("game-day").textContent = `Day ${currentDay}`;
+    }
+
+    function showGameSuccess() {
+      document.getElementById("raising-man-game").classList.add("hidden");
+      const successMessage = `
+        <div style="text-align: center; margin-top: 50px;">
+          <h2>축하합니다! 상남자가 10일간 살아남았습니다!</h2>
+          <p>진정한 상남자로 성장한 캐릭터를 기념합니다!</p>
+          <button onclick="exitRaisingManGame()" style="padding: 10px 20px; font-size: 1.2rem; background-color: darkred; color: white; border: none; border-radius: 5px; cursor: pointer;">메인 화면으로</button>
+        </div>
+      `;
+      const container = document.createElement("div");
+      container.innerHTML = successMessage;
+      document.body.appendChild(container);
+    }
+
+    function getOutcome(possibleOutcomes) {
+      const random = Math.random() * 100;
+      let cumulativeChance = 0;
+    
+      for (let outcome of possibleOutcomes) {
+        cumulativeChance += outcome.chance;
+        if (random < cumulativeChance) {
+          return outcome;
+        }
+      }
+    }
+
+    function showGameOver() {
+      document.getElementById("raising-man-game").classList.add("hidden");
+      document.getElementById("game-over").classList.remove("hidden");
+    }
+
+    function restartGame() {
+      document.getElementById("game-over").classList.add("hidden");
+      startRaisingManGame();
+    }
+
+    function exitRaisingManGame() {
+      document.getElementById("raising-man-game").classList.add("hidden");
+      document.getElementById("welcome").classList.remove("hidden");
+    }
+
   </script>
 </body>
 </html>
