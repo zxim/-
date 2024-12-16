@@ -7,11 +7,14 @@
   <style>
     body {
       margin: 0;
+      padding: 0;
+      height: 100%;
       font-family: Arial, sans-serif;
       background-color: black;
       color: white;
       text-align: center;
       padding: 20px;
+      scroll-behavior: smooth;
     }
     h1, h2 {
       margin-bottom: 20px;
@@ -136,12 +139,39 @@
       display: flex; 
     }
 
+    .video-section {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      top: 0;
+      left: 0;
+    }
+
+    .video-bg {
+      position: absolute; 
+      top: 50%;         
+      left: 50%;        
+      width: 100vw; 
+      height: 100vh; 
+      object-fit: cover;
+      transform: translate(-50%, -50%); 
+      z-index: -1;       
+    }
+
 
   </style>
 </head>
 <body>
-  <h1>상남자의 홈페이지</h1>
-  <div id="main-buttons">
+  <div class="video-section" id="video-section">
+    <video class="video-bg" autoplay muted loop>
+      <source src="man.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+  
+
+  <div id="main-buttons" class="main-buttons">
     <button onclick="showForm('login')">로그인</button>
     <button onclick="showForm('signup')">회원가입</button>
     <img src="image2.png" alt="상남자의 이미지">
@@ -650,6 +680,18 @@
       testArea.classList.remove("visible");
       document.getElementById("welcome").classList.remove("hidden"); 
     }
+
+    const contentSection = document.getElementById('main-buttons');
+    const videoSection = document.getElementById('video-section');
+      
+    window.addEventListener('wheel', function(event) {
+      if (window.scrollY === 0 && event.deltaY > 0) { 
+        window.scrollTo({
+          top: contentSection.offsetTop,
+          behavior: 'smooth'
+        });
+      }
+    });
 
   </script>
 </body>
