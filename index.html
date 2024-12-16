@@ -704,6 +704,7 @@
     let isAlive = true;
     let health = 10; 
     const maxHeartsPerRow = 10; 
+    let deathReason = "";
 
     function startRaisingManGame() {
       currentDay = 1;
@@ -740,19 +741,19 @@
 
     function performAction(action) {
       if (!isAlive) return;
-    
+
       const outcomes = {
         exercise: [
           { chance: 50, result: "운동 성공! 체력이 증가합니다.", effect: +1 },
-          { chance: 10, result: "데드리프트 실패로 깔려 사망!", effect: -health },
-          { chance: 10, result: "벤치프레스 실패로 깔려 사망!", effect: -health },
+          { chance: 10, result: "데드리프트 실패로 깔려 사망!", effect: -health, reason: "데드리프트 실패" },
+          { chance: 10, result: "벤치프레스 실패로 깔려 사망!", effect: -health, reason: "벤치프레스 실패" },
           { chance: 10, result: "운동 중 근육 부상! 체력이 2 감소합니다.", effect: -2 },
           { chance: 10, result: "넘어지며 발목 부상! 체력이 1 감소합니다.", effect: -1 },
           { chance: 10, result: "운동 중 어깨 부상! 체력이 2 감소합니다.", effect: -2 }
         ],
         eat: [
           { chance: 50, result: "맛있게 먹었습니다! 체력이 회복됩니다.", effect: +1 },
-          { chance: 10, result: "밥알이 목에 걸려 사망!", effect: -health },
+          { chance: 10, result: "밥알이 목에 걸려 사망!", effect: -health, reason: "밥알 목에 걸림" },
           { chance: 10, result: "소화 불량으로 체력이 2 감소합니다.", effect: -2 },
           { chance: 10, result: "뜨거운 국물을 마셔 체력이 1 감소합니다.", effect: -1 },
           { chance: 10, result: "잘못된 음식을 먹어 체력이 2 감소합니다.", effect: -2 },
@@ -760,7 +761,7 @@
         ],
         sleep: [
           { chance: 50, result: "푹 잤습니다! 체력이 완전히 회복됩니다.", effect: +1 },
-          { chance: 10, result: "잠결에 침대에서 떨어져 사망!", effect: -health },
+          { chance: 10, result: "잠결에 침대에서 떨어져 사망!", effect: -health, reason: "침대에서 떨어짐" },
           { chance: 10, result: "잠자던 중 악몽을 꿔 체력이 1 감소합니다.", effect: -1 },
           { chance: 10, result: "잠결에 근육 경련이 생겨 체력이 2 감소합니다.", effect: -2 },
           { chance: 10, result: "베개가 너무 높아 목 부상! 체력이 1 감소합니다.", effect: -1 },
@@ -770,6 +771,10 @@
     
       const outcome = getOutcome(outcomes[action]);
       health += outcome.effect;
+    
+      if (outcome.reason) {
+        deathReason = outcome.reason; // 사망 원인 설정
+      }
     
       if (outcome.result.includes("사망") || health <= 0) {
         isAlive = false;
@@ -784,12 +789,13 @@
     
       currentDay++;
       if (currentDay > 10) {
-        showGameSuccess(); 
+        showGameSuccess();
         return;
       }
     
       document.getElementById("game-day").textContent = `Day ${currentDay}`;
     }
+
 
     function showGameSuccess() {
       document.getElementById("raising-man-game").classList.add("hidden");
@@ -820,8 +826,25 @@
 
     function showGameOver() {
       document.getElementById("raising-man-game").classList.add("hidden");
-      document.getElementById("game-over").classList.remove("hidden");
+      const gameOverSection = document.getElementById("game-over");
+      gameOverSection.classList.remove("hidden");
+        
+      const deathMessage = deathReason ? `사망 원인: ${deathReason}` : "알 수 없는 이유로 사망!";
+      const existingMessage = gameOverSection.querySelector(".death-reason");
+      if (existingMessage) {
+        existingMessage.textContent = deathMessage;
+      } else {
+        const additionalMessage = document.createElement("p");
+        additionalMessage.textContent = deathMessage;
+        additionalMessage.className = "death-reason";
+        additionalMessage.style.color = "yellow";
+        additionalMessage.style.fontSize = "1.5rem";
+        additionalMessage.style.marginTop = "10px";
+        gameOverSection.appendChild(additionalMessage);
+      }
     }
+    
+
 
     function restartGame() {
       document.getElementById("game-over").classList.add("hidden");
