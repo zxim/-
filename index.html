@@ -221,6 +221,7 @@
     <h2>상남자 키우기 게임</h2>
     <p id="game-day">Day 1</p>
     <div id="health-container" style="display: flex; flex-wrap: wrap; max-width: 300px; margin: 0 auto;"></div>
+    <img id="character-image" src="라이너.png" alt="상남자 캐릭터" style="width: 200px; margin: 20px auto; display: block;">
     <p id="game-status">상남자가 첫 날을 시작합니다!</p>
     <div id="action-buttons" style="display: flex; justify-content: center; gap: 20px; margin-top: 20px;">
       <button id="exercise-button" onclick="performAction('exercise')">운동하기</button>
@@ -233,6 +234,7 @@
   
   <div id="game-over" class="hidden">
     <h2>상남자가 사망했습니다!</h2>
+    <img id="character-image" src="사망.png" alt="상남자 캐릭터" style="width: 500px; height: auto; margin: 20px auto; display: block;">
     <p>체력을 모두 잃거나 사고로 인해 사망했습니다. 다시 도전하세요!</p>
     <button onclick="restartGame()">다시 시작</button>
   </div>
@@ -782,7 +784,7 @@
     
       currentDay++;
       if (currentDay > 10) {
-        showGameSuccess(); // 게임 성공 처리
+        showGameSuccess(); 
         return;
       }
     
@@ -794,6 +796,7 @@
       const successMessage = `
         <div style="text-align: center; margin-top: 50px;">
           <h2>축하합니다! 상남자가 10일간 살아남았습니다!</h2>
+          <img id="character-image" src="거인.png" alt="상남자 캐릭터" style="width: 500px; height: auto; margin: 20px auto; display: block;">
           <p>진정한 상남자로 성장한 캐릭터를 기념합니다!</p>
           <button onclick="exitRaisingManGame()" style="padding: 10px 20px; font-size: 1.2rem; background-color: darkred; color: white; border: none; border-radius: 5px; cursor: pointer;">메인 화면으로</button>
         </div>
