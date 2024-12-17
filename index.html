@@ -242,10 +242,11 @@
   <div id="game-over2" class="hidden">
     <h2>상남자가 사망했습니다!</h2>
     <img id="character-image" src="땅울림.png" alt="상남자 캐릭터" style="width: 700px; height: auto; margin: 20px auto; display: block;">
-    <p>땅울림 발생! 초대형 거인에게 깔려 사망!</p>
+    <p style="color: red; font-weight: bold; font-size: 1.8rem; text-align: center;">
+      땅울림 발생! 초대형 거인에게 깔려 사망!
+    </p>
     <button onclick="restartGame()">다시 시작</button>
-  </div>
-  
+  </div>  
 
   <script>
     let boardTimer;
@@ -860,11 +861,11 @@
         }
       }
 
-  const healthContainer = document.getElementById("health-container");
-  if (healthContainer) {
-    healthContainer.innerHTML = "";
-  }
-}
+      const healthContainer = document.getElementById("health-container");
+      if (healthContainer) {
+        healthContainer.innerHTML = "";
+      }
+    }
 
 
 
