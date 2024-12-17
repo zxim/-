@@ -234,8 +234,15 @@
   
   <div id="game-over" class="hidden">
     <h2>상남자가 사망했습니다!</h2>
-    <img id="character-image" src="사망.png" alt="상남자 캐릭터" style="width: 500px; height: auto; margin: 20px auto; display: block;">
+    <img id="character-image" src="사망.png" alt="상남자 캐릭터" style="width: 600px; height: auto; margin: 20px auto; display: block;">
     <p>체력을 모두 잃거나 사고로 인해 사망했습니다. 다시 도전하세요!</p>
+    <button onclick="restartGame()">다시 시작</button>
+  </div>
+
+  <div id="game-over2" class="hidden">
+    <h2>상남자가 사망했습니다!</h2>
+    <img id="character-image" src="땅울림.png" alt="상남자 캐릭터" style="width: 700px; height: auto; margin: 20px auto; display: block;">
+    <p>땅울림 발생! 초대형 거인에게 깔려 사망!</p>
     <button onclick="restartGame()">다시 시작</button>
   </div>
   
@@ -749,16 +756,16 @@
         ],
         eat: [
           { chance: 50, result: "밥을 맛있게 먹었습니다! 체력이 회복됩니다.", effect: +1 },
-          { chance: 10, result: "땅울림발생, 초대형거인에게 깔려 사망", effect: -health, reason: "땅울림발생, 초대형거인에게 깔려 사망" },
-          { chance: 10, result: "둘이 먹다 하나 죽어도 모를 음식을 먹고 사망!", effect: -health, reason: "너무 맛있어서 사망" },
+          { chance: 10, result: "땅울림발생, 초대형거인에게 깔려 사망", effect: -health, reason: "땅울림발생, 초대형거인에게 깔려 사망!" },
+          { chance: 10, result: "둘이 먹다 하나 죽어도 모를 음식을 먹고 사망!", effect: -health, reason: "둘이 먹다 하나 죽어도 모를 음식을 먹고 사망!" },
           { chance: 10, result: "뜨거운 국물을 마셔 체력이 1 감소합니다.", effect: -1 },
           { chance: 10, result: "잘못된 음식을 먹어 체력이 2 감소합니다.", effect: -2 },
           { chance: 10, result: "식중독으로 체력이 3 감소합니다.", effect: -3 }
         ],
         sleep: [
           { chance: 50, result: "잠을 푹 잤습니다! 체력이 완전히 회복됩니다.", effect: +1 },
-          { chance: 10, result: "잠결에 침대에서 떨어져 사망!", effect: -health, reason: "침대에서 떨어짐" },
-          { chance: 10, result: "땅울림발생, 초대형거인에게 깔려 사망", effect: -health, reason: "땅울림발생, 초대형거인에게 깔려 사망" },
+          { chance: 10, result: "잠결에 침대에서 떨어져 사망!", effect: -health, reason: "잠결에 침대에서 떨어져 사망!" },
+          { chance: 10, result: "땅울림발생, 초대형거인에게 깔려 사망", effect: -health, reason: "땅울림발생, 초대형거인에게 깔려 사망!" },
           { chance: 10, result: "잠결에 근육 경련이 생겨 체력이 2 감소합니다.", effect: -2 },
           { chance: 10, result: "베개가 너무 높아 목 부상! 체력이 1 감소합니다.", effect: -1 },
           { chance: 10, result: "이불 속에서 몸살 감기! 체력이 3 감소합니다.", effect: -3 }
@@ -823,28 +830,47 @@
       }
     }
 
+
     function showGameOver() {
       document.getElementById("raising-man-game").classList.add("hidden");
-      const gameOverSection = document.getElementById("game-over");
-      gameOverSection.classList.remove("hidden");
-        
-      const deathMessage = deathReason ? `사망 원인: ${deathReason}` : "알 수 없는 이유로 사망!";
-      const existingMessage = gameOverSection.querySelector(".death-reason");
-      if (existingMessage) {
-        existingMessage.textContent = deathMessage;
+      document.getElementById("game-over").classList.add("hidden");
+      document.getElementById("welcome").classList.add("hidden");
+      document.getElementById("board").classList.add("hidden");
+      document.getElementById("game-over2").classList.add("hidden");
+
+      if (deathReason.includes("땅울림발생")) {
+        document.getElementById("game-over2").classList.remove("hidden");
       } else {
-        const additionalMessage = document.createElement("p");
-        additionalMessage.textContent = deathMessage;
-        additionalMessage.className = "death-reason";
-        additionalMessage.style.color = "yellow";
-        additionalMessage.style.fontSize = "1.5rem";
-        additionalMessage.style.marginTop = "10px";
-        gameOverSection.appendChild(additionalMessage);
+        const gameOverSection = document.getElementById("game-over");
+        gameOverSection.classList.remove("hidden");
+      
+        const deathMessage = deathReason ? `사망 원인: ${deathReason}` : "알 수 없는 이유로 사망!";
+        const existingMessage = gameOverSection.querySelector(".death-reason");
+      
+        if (existingMessage) {
+          existingMessage.textContent = deathMessage;
+        } else {
+          const additionalMessage = document.createElement("p");
+          additionalMessage.textContent = deathMessage;
+          additionalMessage.className = "death-reason";
+          additionalMessage.style.color = "yellow";
+          additionalMessage.style.fontSize = "1.5rem";
+          additionalMessage.style.marginTop = "10px";
+          gameOverSection.appendChild(additionalMessage);
+        }
       }
-    }    
+
+  const healthContainer = document.getElementById("health-container");
+  if (healthContainer) {
+    healthContainer.innerHTML = "";
+  }
+}
+
+
 
     function restartGame() {
       document.getElementById("game-over").classList.add("hidden");
+      document.getElementById("game-over2").classList.add("hidden");
       startRaisingManGame();
     }
 
