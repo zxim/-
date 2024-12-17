@@ -799,17 +799,20 @@
 
     function showGameSuccess() {
       document.getElementById("raising-man-game").classList.add("hidden");
-      const successMessage = `
-        <div style="text-align: center; margin-top: 50px;">
-          <h2>축하합니다! 상남자가 10일간 살아남았습니다!</h2>
-          <img id="character-image" src="거인.png" alt="상남자 캐릭터" style="width: 500px; height: auto; margin: 20px auto; display: block;">
-          <p>진정한 상남자로 성장한 캐릭터를 기념합니다!</p>
-          <button onclick="exitRaisingManGame()" style="padding: 10px 20px; font-size: 1.2rem; background-color: darkred; color: white; border: none; border-radius: 5px; cursor: pointer;">메인 화면으로</button>
-        </div>
+
+      const successContainer = document.createElement("div");
+      successContainer.id = "success-message";
+      successContainer.style.textAlign = "center";
+      successContainer.style.marginTop = "50px";
+
+      successContainer.innerHTML = `
+        <h2>축하합니다! 상남자가 10일간 살아남았습니다!</h2>
+        <img id="character-image" src="거인.png" alt="상남자 캐릭터" style="width: 500px; height: auto; margin: 20px auto; display: block;">
+        <p>진정한 상남자로 성장한 캐릭터를 기념합니다!</p>
+        <button onclick="exitRaisingManGame()" style="padding: 10px 20px; font-size: 1.2rem; background-color: darkred; color: white; border: none; border-radius: 5px; cursor: pointer;">메인 화면으로</button>
       `;
-      const container = document.createElement("div");
-      container.innerHTML = successMessage;
-      document.body.appendChild(container);
+
+      document.body.appendChild(successContainer);
     }
 
     function getOutcome(possibleOutcomes) {
@@ -842,9 +845,7 @@
         additionalMessage.style.marginTop = "10px";
         gameOverSection.appendChild(additionalMessage);
       }
-    }
-    
-
+    }    
 
     function restartGame() {
       document.getElementById("game-over").classList.add("hidden");
@@ -853,8 +854,14 @@
 
     function exitRaisingManGame() {
       document.getElementById("raising-man-game").classList.add("hidden");
+
+      const successMessage = document.getElementById("success-message");
+      if (successMessage) {
+        successMessage.remove();
+      }
       document.getElementById("welcome").classList.remove("hidden");
     }
+
 
   </script>
 </body>
