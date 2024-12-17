@@ -720,22 +720,18 @@
     function updateHealthDisplay() {
       const healthContainer = document.getElementById("health-container");
       healthContainer.innerHTML = ""; 
-    
-      let row;
+        
+      healthContainer.style.display = "flex";
+      healthContainer.style.justifyContent = "center";
+      healthContainer.style.flexWrap = "nowrap"; 
+        
       for (let i = 0; i < health; i++) {
-        if (i % maxHeartsPerRow === 0) {
-          row = document.createElement("div");
-          row.style.display = "flex";
-          row.style.justifyContent = "center";
-          healthContainer.appendChild(row);
-        }
-      
         const heart = document.createElement("img");
         heart.src = "heart.png"; 
         heart.alt = "체력";
         heart.style.width = "30px";
         heart.style.margin = "5px";
-        row.appendChild(heart);
+        healthContainer.appendChild(heart);
       }
     }
 
