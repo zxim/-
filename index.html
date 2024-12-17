@@ -236,7 +236,7 @@
   <div id="game-over" class="hidden">
     <h2>라이너가 사망했다!</h2>
     <img id="character-image" src="사망.png" alt="상남자 캐릭터" style="width: 600px; height: auto; margin: 20px auto; display: block;">
-    <p>체력을 모두 잃거나 사고로 인해 사망했습니다. 다시 도전하세요!</p>
+    <p>체력을 모두 잃거나 사고로 인해 사망했다. 다시 도전해라!</p>
     <button onclick="restartGame()">다시 시작</button>
   </div>
 
@@ -245,6 +245,15 @@
     <img id="character-image" src="땅울림.png" alt="상남자 캐릭터" style="width: 700px; height: auto; margin: 20px auto; display: block;">
     <p style="color: red; font-weight: bold; font-size: 1.8rem; text-align: center;">
       땅울림 발생! 초대형 거인에게 깔려 사망!
+    </p>
+    <button onclick="restartGame()">다시 시작</button>
+  </div>
+  
+  <div id="game-over3" class="hidden">
+    <h2>라이너가 사망했다!</h2>
+    <img id="character-image" src="에렌.png" alt="상남자 캐릭터" style="width: 700px; height: auto; margin: 20px auto; display: block;">
+    <p style="color: red; font-weight: bold; font-size: 1.8rem; text-align: center;">
+      진격의 거인을 만나 제압당해 사망!
     </p>
     <button onclick="restartGame()">다시 시작</button>
   </div>  
@@ -847,10 +856,15 @@
       document.getElementById("welcome").classList.add("hidden");
       document.getElementById("board").classList.add("hidden");
       document.getElementById("game-over2").classList.add("hidden");
+      document.getElementById("game-over3").classList.add("hidden");
 
       if (deathReason.includes("땅울림발생")) {
         document.getElementById("game-over2").classList.remove("hidden");
-      } else {
+      } 
+      else if(deathReason.includes("진격의")) {
+        document.getElementById("game-over3").classList.remove("hidden");
+      }
+      else {
         const gameOverSection = document.getElementById("game-over");
         gameOverSection.classList.remove("hidden");
       
@@ -881,6 +895,7 @@
     function restartGame() {
       document.getElementById("game-over").classList.add("hidden");
       document.getElementById("game-over2").classList.add("hidden");
+      document.getElementById("game-over3").classList.add("hidden");
       startRaisingManGame();
     }
 
