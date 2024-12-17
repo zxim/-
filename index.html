@@ -741,7 +741,7 @@
       const outcomes = {
         exercise: [
           { chance: 50, result: "운동 성공! 체력이 증가합니다.", effect: +1 },
-          { chance: 10, result: "스쿼트 실패로 깔려 사망!", effect: -health, reason: "스쿼트하다 깔려 사망" },
+          { chance: 10, result: "땅울림발생, 초대형거인에게 깔려 사망", effect: -health, reason: "땅울림발생, 초대형거인에게 깔려 사망" },
           { chance: 10, result: "벤치프레스 실패로 깔려 사망!", effect: -health, reason: "벤치프레스하다 깔려 사망" },
           { chance: 10, result: "운동 중 근육 부상! 체력이 3 감소합니다.", effect: -3 },
           { chance: 10, result: "넘어지며 발목 부상! 체력이 1 감소합니다.", effect: -1 },
@@ -749,7 +749,7 @@
         ],
         eat: [
           { chance: 50, result: "밥을 맛있게 먹었습니다! 체력이 회복됩니다.", effect: +1 },
-          { chance: 10, result: "밥알이 목에 걸려 사망!", effect: -health, reason: "사례 들려서 사망" },
+          { chance: 10, result: "땅울림발생, 초대형거인에게 깔려 사망", effect: -health, reason: "땅울림발생, 초대형거인에게 깔려 사망" },
           { chance: 10, result: "둘이 먹다 하나 죽어도 모를 음식을 먹고 사망!", effect: -health, reason: "너무 맛있어서 사망" },
           { chance: 10, result: "뜨거운 국물을 마셔 체력이 1 감소합니다.", effect: -1 },
           { chance: 10, result: "잘못된 음식을 먹어 체력이 2 감소합니다.", effect: -2 },
@@ -758,7 +758,7 @@
         sleep: [
           { chance: 50, result: "잠을 푹 잤습니다! 체력이 완전히 회복됩니다.", effect: +1 },
           { chance: 10, result: "잠결에 침대에서 떨어져 사망!", effect: -health, reason: "침대에서 떨어짐" },
-          { chance: 10, result: "악몽을 꾸었습니다. 가위에 눌려 사망!", effect: -health, reason: "가위에 눌려 사망" },
+          { chance: 10, result: "땅울림발생, 초대형거인에게 깔려 사망", effect: -health, reason: "땅울림발생, 초대형거인에게 깔려 사망" },
           { chance: 10, result: "잠결에 근육 경련이 생겨 체력이 2 감소합니다.", effect: -2 },
           { chance: 10, result: "베개가 너무 높아 목 부상! 체력이 1 감소합니다.", effect: -1 },
           { chance: 10, result: "이불 속에서 몸살 감기! 체력이 3 감소합니다.", effect: -3 }
@@ -769,7 +769,7 @@
       health += outcome.effect;
     
       if (outcome.reason) {
-        deathReason = outcome.reason; // 사망 원인 설정
+        deathReason = outcome.reason; 
       }
     
       if (outcome.result.includes("사망") || health <= 0) {
@@ -857,7 +857,6 @@
       }
       document.getElementById("welcome").classList.remove("hidden");
     }
-
 
   </script>
 </body>
